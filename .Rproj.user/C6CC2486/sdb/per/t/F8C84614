@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "libray(ggplot2)\n\n#str() look at structure of data frame, mpg comes with package\nstr(mtcars)\n\n#head() or tail() look at first or last values of a container\ntail(mtcars)\n\n#compare numeric variables, mpg and wt\n\nggplot(data = mtcars, aes(x=wt, y=mpg))  +\n  xlab(\"Car weight\") +\n  ylab(\"MPG\") +\n  geom_point(col = \"blue\") +\n  ggtitle(\"Car weight vs fuel efficiency\") +\n  stat_smooth(col = \"black\") # linear regression\n# stat_smooth(se= FALSE)  # removes standard error band\n# stat_smooth(method = \"lm\")  #linear model\n\n\n\n#a line\n#geom_line(data = df, aes(x = x, y = y), color = \"red\")\n\n# error bars\n#geom_errorbar(data = ds,\n#              aes(gp, mean, ymin = mean - sd, ymax = mean + sd),\n #             colour = 'red',\n  #            width = 0.4)\n\n# another example\np <- ggplot(mtcars, aes(mpg, wt, colour = cyl)) + geom_point()\np + labs(colour = \"Cylinders\")\np + labs(x = \"New x label\")\n\n# Standard deviation of the mean\nggplot(df3, aes(x=dose, y=len, group=supp, color=supp)) + \n  geom_errorbar(aes(ymin=len-sd, ymax=len+sd), width=.1) +\n  geom_line() + geom_point()+\n  scale_color_brewer(palette=\"Paired\")+theme_minimal()",
+    "created" : 1542586573114.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1417962674",
+    "id" : "F8C84614",
+    "lastKnownWriteTime" : 1542609591,
+    "last_content_update" : 1542609591953,
+    "path" : "~/OneDrive/Coding Reference/Coding_Examples/ggplot_guide.R",
+    "project_path" : "ggplot_guide.R",
+    "properties" : {
+        "tempName" : "Untitled3"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

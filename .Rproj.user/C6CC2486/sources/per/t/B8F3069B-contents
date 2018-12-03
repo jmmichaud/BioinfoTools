@@ -1,0 +1,46 @@
+# The vector `p` contains 100 proportions of Democrats ranging from 0 to 1 using the `seq` function
+p <- seq(0, 1, length = 100)
+
+# The vector `sample_sizes` contains the three sample sizes
+sample_sizes <- c(25, 100, 1000)
+
+# Write a for-loop that calculates the standard error `se` for every value of `p` for each of the three samples sizes `N` in the vector `sample_sizes`. Plot the three graphs, using the `ylim` argument to standardize the y-axis across all three plots.
+for(N in sample_sizes){
+  se <-  sqrt((p * (1-p))/N)
+}  
+plot(p,se, ylim= c(0,sqrt(0.5/25)))
+
+
+
+# Write a function called `take_sample` that takes `p` and `N` as arguements and returns the average value of a randomly sampled population.
+take_sample <- function(p,N){
+  X <- sample (c(1,0), size = N, replace= TRUE, prob= c(p,1-p))
+  mean(X)
+#  return(X)
+}
+
+# Use the `set.seed` function to make sure your answer matches the expected result after random sampling
+set.seed(1)
+take_sample(0.45, 100)
+
+library(dslabs)
+# Load the data
+data(polls_us_election_2016)
+
+# Generate an object `polls` that contains data filtered for polls that ended on or after October 31, 2016 in the United States
+polls <- filter(polls_us_election_2016, )
+
+# How many rows does `polls` contain? Print this value to the console.
+
+
+# Assign the sample size of the first poll in `polls` to a variable called `N`. Print this value to the console.
+
+
+
+# For the first poll in `polls`, assign the estimated percentage of Clinton voters to a variable called `X_hat`. Print this value to the console.
+
+
+# Calculate the standard error of `X_hat` and save it to a variable called `se_hat`. Print this value to the console.
+
+
+# Use `qnorm` to calculate the 95% confidence interval for the proportion of Clinton voters. Save the lower and then the upper confidence interval to a variable called `ci`.

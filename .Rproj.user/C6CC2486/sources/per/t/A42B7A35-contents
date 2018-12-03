@@ -1,0 +1,145 @@
+# Functions for Statical Analyses in R
+#______________________________________
+
+# Most examples derive from Harvard Data Science course series on edX (PH125).  
+# This serves as a cheat sheet for east access and does not indicate novel code.
+
+
+
+
+# Discrete Probability
+#______________________________________
+
+#Permutions 
+#(number of ways r items can be arranged with or without replacement from n items 
+#when order matters, v is a vector of items to sample from, 
+#if v is not provided the default will be a vector of N integers, 1 - N)
+
+#permutations(n=3,r=2,v=x,repeats.allowed=F) in gtools
+
+#example:  Calculate the number of ways 21 (blackjack) can be made from a deck of cards, 
+#deck is vector of all the different cards in the deck
+library(gtools)
+deck <- c('AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '10H', 'JH', 'QH', 'KH','AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '10D', 'JD', 'QD', 'KD','AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '10S', 'JS', 'QS', 'KS','AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '10C', 'JC', 'QC', 'KC')
+aces <- c('AH','AD','AS','AC')
+tens  <- c('10H','10D','10S','10C','JH','JD','JS','JC','QH','QD','QS','QC','KH','KD','KS','KC')
+
+handsP <- permutations(52, 2, v = deck, repeats.allowed=F) #all different ways 2 cards can be combined
+firstcard <- handsP[,1] #all the first cards
+secondcard <- handsP[,2] #all the second cards
+sum(firstcard %in% aces) #number of cases where first card is an ace
+sum(firstcard %in% aces)/nrow(hands) #proportion of cases where first card is an ace
+mean(firstcard %in% aces) #gives same portion of cases where first card is an ace
+mean(firstcard %in% tens & secondcard %in% aces)#proportion of cases where first card is an facecard and second card is an ace
+
+#the probability that the first and second cards will either be a facecard or an ace ie all cases of 21
+blackjackchanceP <- mean(firstcard %in% tens & secondcard %in% aces) + mean(firstcard %in% aces & secondcard %in% tens)
+blackjackchanceP
+
+#Combinations
+#(number of ways r items can be arranged with or without replacement from n items 
+#when order doesn't matter, v is a vector of items to sample from, 
+#if v is not provided the default will be a vector of N integers, 1 - N)
+
+#combinations(n=3,r=2,v=x,repeats.allowed=F) in gtools
+
+#example calculate chance of blackjack
+handsC <- combinations(52,2 ,v = deck, repeats.allowed=F)
+
+blackjackchanceC <- mean(handsC[,1] %in% tens & handsC[,2] %in% aces) + mean(handsC[,1] %in% aces & handsC[,2] %in% tens)
+blackjackchanceC
+
+#regardless of approach of using permutations or combinations the same answer of 0.0482 (4.8%) probability.
+
+
+
+#Monte Carlo for simple prediction 
+
+#predict if one or more people in a group of n people share the same birthday
+
+#this would assume that birhdays are equal and any date is as equally likely.  takes 200 random samples from a vector 1-365
+#repeated 10000 times
+
+B <- 10000 #number of times for monte carlo to sample
+n <- 20 #number of people
+results <- replicate(B,{ 
+  bdays <- sample(1:365, n, replace = TRUE) 
+  any(duplicated(bdays))
+  })
+
+mean(results)
+
+#at 200 people its just about 100% sure that there will be a duplicated birhtday. at 20 people the probabilty drops to 40%.
+
+
+#at how many people is the probability greater than 0.5
+
+
+
+prob_calc <- function(n, B=10000) {
+  same_bdays <-replicate(B, {
+    bdays <- sample(1:365, n, replace = TRUE) 
+    any(duplicated(bdays))
+  })
+  mean(same_bdays)
+}
+
+n <- seq(1,60)
+
+probs <- sapply(n, prob_calc)
+plot(n, probs)
+
+# the plot shows that a value of 22 people results in greater than 50% chance of duplicated birthday
+
+# Calculate the exact prob an individual has a unique bday
+# each person added in the group adds a prob 1 x 364/365 x 363/365…(365-n+1)/365
+
+exact_prob <- function(n) {
+  unique_prob <- seq(365, 365-n+1)/365
+  1-prod(unique_prob)
+}
+
+
+uprob <- sapply(n, exact_prob)
+
+lines(n, uprob, col = 'green')  #requires previous plot: probs v n
+
+
+#Look at stability of monte carlo, ie at what values of B are values reliable
+
+prob_calcB <- function(B, n = 22) {
+  same_bdays <-replicate(B, {
+    bdays <- sample(1:365, n, replace = TRUE) 
+    any(duplicated(bdays))
+  })
+  mean(same_bdays)
+}
+
+B <- 10^seq(1,5, len = 100)
+
+probB <- sapply(B, prob_calcB)
+plot(log10(B), probB, type = 'l')
+
+# between B = 1000 to 10000 probability measurement stabalized to 0.5 (the expected value for n=22)
+
+
+
+prob_calcN <- function(n, B = 10000) {
+  same_bdays <-replicate(B, {
+    bdays <- sample(1:365, n, replace = TRUE) 
+    any(duplicated(bdays))
+  })
+  mean(same_bdays)
+}
+
+n <- seq(1,100)
+
+probN <- sapply(n, prob_calcN)
+plot(n, probN, type = 'l')
+
+
+
+
+
+
+

@@ -1,0 +1,213 @@
+---
+title: "Clustering and PCA"
+output:
+  html_document:
+    df_print: paged
+---
+
+The code described in this notebook decribe how to perform hierarchal clustering to create dendrograms and how to perform simple principal component analysis (PCA) in R using multiple methods.  Clustering is applied to differential gene expression (DGE) files.  PCA is performed on storm data with multiple parameters.  
+
+# Hierarchical clustering and Dendrograms
+
+Potential relationships between treatment and control groups of DGE data of up- or down- regulated genes is examined through hierarchical clustering.  The data here was read in from .tab files as a table.
+```{r}
+data <- read.table("DGEdata.tab", header = TRUE, sep="\t") 
+```
+    
+    
+**Select data to cluster-**  
+Filter data to isolate relationships you want to examine.  The data here is looking at all timepoints from a treatment group, but a specific timepoint was also examined.
+```{r}
+library(dplyr)
+allAb <- data[,2:33]
+#allAb <- select(data, contains("Ab"))
+#Ab48 <- select(allAb, starts_with("T48"))
+```
+
+  
+**Normalization-**  
+Data is converted to a matrix, zero values are adjusted by added 0.01 (any small number is good).  The values are normalized by dividing values by the sum of gene counts for the group (sum of columns).  The normalized or normalized log of these values is used and the matrix is transposed (t()) to get in proper format.
+```{r}
+allAb_matx = as.matrix(allAb + 0.01)
+allAb_sumx = apply(allAb_matx, 2, sum)
+allAb_normx = t(allAb_matx / allAb_sumx)
+allAb_logx = t(log(allAb_matx / allAb_sumx))
+```
+
+  
+**Create distance matrix-**  
+Different methods are used to create distance matrices that may elucidate clustering data.  The two used here are euclidean and bray-curtiss.  Euclidean is a basic method that used squared distances. Bray-Curtis creates a matrix based upon similarity.  It is often used in ecology and is useful for looking at communities.  The Euclidean matrix is availalbe throught the dist() fuction. The Bray-Curtis method is available through the vegan package (vegdist()).  
+```{r}
+library(vegan)
+allAb_eucl = dist(allAb_logx, "euclidean")
+allAb_brayl= vegdist(allAb_logx, "bray")
+allAb_eucn = dist(allAb_normx, "euclidean")
+allAb_brayn= vegdist(allAb_normx, "bray")
+```
+
+  
+**Perform hierarchical cluster analysis-**  
+hclust() fucntion inputs a distance matrix and clusters data iteratively.  Like distance matrices, different methods are available.  Complete finds similar clusters and Ward's finds clusters using minimum variance to find compact clusters.  Single linkage uses a "friend of friends" method.  Wards is a good choice for DGE data; wards.D2 uses implements criterion from Ward's(1963) which distances are squared before cluster updating.  THe ward.D version does not.
+```{r}
+allAb_euc_wards = hclust(allAb_eucl, method = "ward.D2")
+allAb_bray_wards = hclust(allAb_brayn, method = "ward.D2")
+```
+
+  
+**Create dendrograms-** 
+The hclust() function outputs a list of several components.  To visualize results it is useful to employ a dendrogram.  hclust() data is converted with as.dendrogram().  The package dendextend is used to tweak dendrogram plots.
+```{r}
+allAb_euc_wards_dendogram = as.dendrogram(allAb_euc_wards)
+allAb_bray_wards_dendogram = as.dendrogram(allAb_bray_wards)
+
+#plot dendrogram
+library(dendextend)
+par(mfrow=c(2,1))  #set 2 rows 1 column
+
+#Create color labels according to replicates, extract categories from column names and create palette tied to categories
+library(RColorBrewer)
+groupCodes <- as.factor(substr(names(allAb), -2, nchar(names(allAb))-2)) 
+groupColor <- brewer.pal(12, "Paired")[groupCodes]
+
+#color labels
+colors_to_use <- groupColor
+colors_to_use_euc <- colors_to_use[order.dendrogram(allAb_euc_wards_dendogram)]
+colors_to_use_bray <- colors_to_use[order.dendrogram(allAb_bray_wards_dendogram)]
+labels_colors(allAb_euc_wards_dendogram) <- colors_to_use_euc 
+labels_colors(allAb_bray_wards_dendogram) <- colors_to_use_bray 
+
+#adjust label size
+labels_cex(allAb_euc_wards_dendogram) = 0.50
+labels_cex(allAb_bray_wards_dendogram) = 0.50
+
+
+plot(allAb_euc_wards_dendogram, cex.lab = 0.70)
+title(main = "Dendrogram | Ward's Method (Euclidean)", cex.main = 0.65)
+
+plot(allAb_bray_wards_dendogram, cex.lab = 0.70)
+title(main = "Dendrogram | Ward's Method (Bray-Curtis)", cex.main = 0.65)
+
+```
+
+#Principal component analysis (PCA)   
+
+A good way to see relationships between data is to use principal component analysis.  It is similar to clustering as clustering of data is good to see relationships however, in PCA several variables are condensed into principal components describe variance by showing the directions in which there is the most variance in the data. The first principle component (PC) shows the most variance in the data and subsequent PCs have less and less. PCs are comprised of eigenvector/eigenvalue pairs where the vector shows the direction and value the amount of variation, so PC1 is the PC with the largest eigenvalue.  The amount of PCs is equal to the number of variables.
+
+There are several different fuctions and packages that can be applied to PCA. In base R there are prcomp() and princomp().  They generate similar data but are calculated differently prcomp() is preferred for numerical accuracy.  PCA() from the FactoMineR package is also useful as it has a lot of parameters that can be manipulated. Here prcomp() and PCA() are used.
+
+Load data, csv used here. Extract relevant data.  Here the data is normalized to the samples before being carried through to PCA (aside from standard normalization)
+```{r}
+PCAdata <- read.csv("PCAdata.csv") 
+PCAdata <- PCAdata[1:42,]
+Tdatap <- PCAdata[,14:26] 
+```
+Extract categories
+```{r}
+PCA.ID <- as.factor(PCAdata[,1])
+PCA.storm <- as.factor(PCAdata[,2])
+PCA.phylum <- as.factor(PCAdata[,3])
+PCA.class <- as.factor(PCAdata[,4])
+PCA.order <- as.factor(PCAdata[,5])
+PCA.family <- as.factor(PCAdata[,6])
+PCA.code <- as.factor(PCAdata[,7])
+PCA.Tone <- as.factor(PCAdata[,8])
+PCA.Ttwo <- as.factor(PCAdata[,9])
+PCA.Type <- as.factor(PCAdata[,10])
+```
+
+Variables for PCA should be in columns.  PCA data needs a mean 0, sd 1.  Normalization can be performed within functions as well (scale.= TRUE in prcomp)  or can be done manually.
+```{r}
+Pdata_sumx <- apply(Tdatap, 2, sum)
+Pdata_norm <- Tdatap/ Pdata_sumx
+```
+
+PCA with function prcomp. Center and scale. are mean and sd deviation input features.
+```{r}
+pca1 <- prcomp(Tdatap, scale. = TRUE)
+#pca1 <- prcomp(Pdata_norm, scale. = TRUE)
+# sqrt of eigenvalues
+print("sdev")
+pca1$sdev
+# loadings
+print("rotation")
+head(pca1$rotation)
+# PCs (aka scores)
+print("PCs")
+head(pca1$x)
+print("center")
+pca1$center
+print("scale")
+pca1$scale
+print("summary")
+summary(pca1)
+```
+Plot PCA (prcomp()) results.
+```{r}
+par(mfrow=c(2,2))
+plot(pca1$x[,1], col=PCA.storm)
+plot(pca1$x[,2], col=PCA.storm)
+plot(pca1$x[,3], col=PCA.storm)
+plot(pca1$x[,4], col=PCA.storm)
+```
+Screeplot- To decide with PC to keep
+```{r}
+screeplot(pca1)
+```
+Biplot-
+```{r}
+
+plot(pca1$x[,1], pca1$x[,2], xlab=paste("PC1 (", round(summary(pca1)$importance[2]*100, 1), "%)", sep = ""), ylab=paste("PC2 (", round(summary(pca1)$importance[5]*100, 1), "%)", sep = ""), col=PCA.storm, pch = c(16, 17, 18, 16, 17,18, 16, 17, 18, 16, 17,18, 16)[PCA.storm],cex=1, las=1, asp=1)
+
+# Add grid lines
+abline(v=0, lty=2, col="grey50")
+abline(h=0, lty=2, col="grey50")
+# Add labels
+text(pca1$x[,1], pca1$x[,2], labels=PCA.ID, pos=c(1,3,4,2), font=0.2)
+#legend
+#legend("topleft", legend=PCA.storm, col=PCA.storm, pch=c(16, 17, 18, 16, 17,18, 16, 17, 18, 16, 17,18, 16)[PCA.storm], pt.cex=.5)
+```
+ggplot biplot
+```{r}
+library(ggplot2)
+
+var1 <-round(summary(pca1)$importance[2]*100, 1)
+var2 <-round(summary(pca1)$importance[5]*100, 1)
+pc1lab <- paste(c("PC1 (", var1, "%)"), collapse = "")
+pc2lab <- paste(c("PC2 (", var2, "%)"), collapse = "")
+
+pcs <- as.data.frame(pca1$x)
+p <- ggplot(data = pcs, aes(x = PC1, y = PC2, colour = PCA.storm)) + 
+    geom_point(size=1) + 
+    guides(fill=guide_legend(ncol=2)) +
+    coord_fixed(ratio=1, xlim=range(pcs$PC1), ylim=range(pcs$PC2)) +
+    theme_bw()  +
+    xlab(pc1lab) +
+    ylab(pc2lab) +
+    geom_hline(yintercept = 0, colour = "gray65") +
+    geom_vline(xintercept = 0, colour = "gray65") +
+    ggtitle("PCA of Storm Data") 
+p
+```
+
+
+PCA with function PCA() from FactoMineR.
+```{r}
+library(FactoMineR)
+# apply PCA
+pca2 = PCA(Tdatap, scale.unit = TRUE, graph = TRUE)
+
+# matrix with eigenvalues
+pca2$eig
+
+# correlations between variables and PCs
+pca2$var$coord
+
+# PCs (aka scores)
+head(pca2$ind$coord)
+```
+
+
+
+
+
+

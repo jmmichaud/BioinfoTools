@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542149258118.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "255400201",
+    "id" : "B8F3069B",
+    "lastKnownWriteTime" : 1529001848,
+    "last_content_update" : 1529001848,
+    "path" : "~/OneDrive/Coding Reference/DataScience_edxHarvardx/inference_modelingclass.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

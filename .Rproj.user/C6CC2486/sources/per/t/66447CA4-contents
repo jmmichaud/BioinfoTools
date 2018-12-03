@@ -1,0 +1,306 @@
+# Functions for Statical Analyses in R
+#______________________________________
+
+# This serves as a reference and does not indicate novel code
+# Most examples derive from Harvard Data Science course series on edX (PH125).  
+
+#______________________________________
+# Distibution Functions
+
+
+#On certain variables or paramters its not useful to assign probability to an 
+#individual but to break data into intervals
+
+
+#-------------------------------------------
+#example file containing weights of cats, weights
+
+
+#Emprical cumulative distribution function, summary of a list of numeric values, the
+#probability the variable takes a value less than or equal to x
+#F <- function(a) mean(x<=a)
+F <- function(a) mean(weights <=a)
+
+#to get the probabiliy of a cat heavier than 10 lbs.  
+
+pr <- 1-F(10)
+
+#prob of a cat between 6 and 9 lbs
+
+pr <- F(9) - F(6)
+
+#the cumulative distribution for the normal distribution can be achieved with pnorm for 
+#a distribution (a) with an average (avg), and standard deviation (s).
+
+#F(a) = prnorm(q=a, mean=avg, sd=s, lower.tail = T) lower.tail means less than q if true, greater if false
+
+# for example above probability to get a cat heavier than 10 pounds, mean of 9.5, sd of 3
+
+pr <- pnorm(10, mean(weights), sd(weights), lower.tail = FALSE)
+pr <- pnorm(10, 9.5, 3, lower.tail = F)
+
+
+# Other useful functions for the normal distribution
+
+#rnorm(n, mean = 0, sd = 1) n is number of observations. 
+#Generates n random numbers following normal distribution given a mean and standard deviation
+n <- 50
+dist <- rnorm(n, mean=40, sd=4)
+hist(dist)
+
+#dnorm(x, mean = 0, sd = 1, log = FALSE))  x is vector of quantiles
+#Generates Probablity density function or density () 
+
+pdf <- dnorm(dist, mean=40, sd=4)
+plot(dist, pdf)
+
+#qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) p is a vector of probabilities
+#calculates quantiles, first quantile is 0.25. ie it gives a value that p proportion 
+# or probability of all the values is less than the computed value.
+
+quant1 <- qnorm(0.25, mean=40, sd=4)
+#37.3
+# 25% of the values in this distribution are less than 37.3
+
+#pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+#as stated gives the cumalitive distribution function or the probility 
+#a variable takes a value less than q, the value provided
+#lower.tail = F will give the prob of a value greater than q,
+#it represents the area under the probability density function in the range less than q, zscore
+
+# chance of a value less than 42
+
+pnorm(42,mean=40, sd=4)
+#0.69
+
+
+#Monte carlo similuations are possible using rnorm 
+#to compare to actual data or to perform simulations
+
+#if 800 values of normally distributed data are choosen at random, 
+#what is the distribution of the minimum values?
+#WHat is the chance of minimum less than 28?
+
+B <- 10000
+min_values <- replicate(B, {
+  simulated_data <- rnorm(800, mean=40, sd=4)
+  min(simulated_data)
+})
+mean(min_values <= 28)
+#0.66
+
+
+#----------------------------------------------------------------
+# The same suite of functions can be used for other distributions
+
+#Beta	pbeta	qbeta	dbeta	rbeta
+#Binomial	pbinom	qbinom	dbinom	rbinom
+#Cauchy	pcauchy	qcauchy	dcauchy	rcauchy
+#Chi-Square	pchisq	qchisq	dchisq	rchisq
+#Exponential	pexp	qexp	dexp	rexp
+#F	pf	qf	df	rf
+#Gamma	pgamma	qgamma	dgamma	rgamma
+#Geometric	pgeom	qgeom	dgeom	rgeom
+#Hypergeometric	phyper	qhyper	dhyper	rhyper
+#Logistic	plogis	qlogis	dlogis	rlogis
+#Log Normal	plnorm	qlnorm	dlnorm	rlnorm
+#Negative Binomial	pnbinom	qnbinom	dnbinom	rnbinom
+#Normal	pnorm	qnorm	dnorm	rnorm
+#Poisson	ppois	qpois	dpois	rpois
+#Student t	pt	qt	dt	rt
+#Studentized Range	ptukey	qtukey	dtukey	rtukey
+#Uniform	punif	qunif	dunif	runif
+#Weibull	pweibull	qweibull	dweibull	rweibull
+#Wilcoxon Rank Sum Statistic	pwilcox	qwilcox	dwilcox	rwilcox
+#Wilcoxon Signed Rank Statistic	psignrank	qsignrank	dsignrank	rsignrank
+
+
+
+#Sampling Models
+#Model behavior of random variables
+#__________________________________________
+#-------------------------------------------
+#Model behavior of a roulette wheel where if the player lands on red the casino
+#loses 1 dollar, else they gain a dollar
+
+wheel <- rep(c("Black", "Red", "Green"), c(18, 18, 2))
+
+#1000 random draws
+n <- 1000
+draws <- sample(ifelse(wheel=="Red", -1, 1), n, replace = T)
+profit <- sum(draws)
+
+#based upon proportion of colored spaces and equal chance
+#to land on a space, the draws can be derived more simply
+draws <- sample(c(-1,1), n, replace = T, prob(c(9/19,10/19)))
+profit <- sum(draws)
+
+#Simulate 10000 times
+n <- 1000
+B <- 10000
+avgprofit <- replicate(B, {
+  draws <- sample(c(-1,1), n, replace = T, prob = c(9/19,10/19))
+  sum(draws)
+})
+
+#compare histogram of avgprofit to density function deriveed from the mean and sd alone.
+s <- seq(min(avgprofit), max(avgprofit), length = 100)
+normal_density <-data.frame(s = s, f= dnorm(s, mean(avgprofit), sd(avgprofit)))
+data.frame(avgprofit = avgprofit) %>% ggplot(aes(avgprofit, ..density..)) +
+  geom_histogram(color = "black", binwidth = 10) +
+  ylab("Probability") +
+  geom_line(data = normal_density, mapping= aes(s,f), color = "red")
+
+
+#Central Limit Theorem - a collection of independant random variables 
+#their normalized sum  or mean approaches a normal distribution even if the variables 
+#are no normally distributed.  allows application of parameters of normal distributions
+
+# two outcomes a and b, probility p
+#mean = ap + b(1-p)  (the number of outcomes cancel out)
+#sd = (based upon distribution of whole population)
+# the sampling distribution of the mean.  the outcome of n draws from the 
+#sample repeated several times has
+#mean of means(expected value) = ap + b(1-p) 
+#standard error of the mean = standard deviation / sqrt(mean)
+
+#total expected value = n *  (ap + b(1-p))
+#total variance = n * sigma^2
+#total std deviation or standard error of sum 
+# = sqrt(n) * sigma = sqrt(n) * |b-a| sqrt(p(1-p)))
+#for n= 1, standard error = |b-a| sqrt(p(1-p)))
+
+#example:
+#from above roulette example
+# a casino wins (+1), black or green, p(a) = 20/38 = 10/19
+# b casino loses(-1), red, p(b) = 18/38 = 1 - p(a) = 9/19
+
+#Expected value of E is 
+#(20 + 18)/38 = $0.05
+#ap + b(1-p) , n * (ap + b(1-p)) for n=1
+E <- 1*(10/19)+(-1)*(9/19)
+#0.052
+
+#Standard error
+#abs(b-a)* sqrt(p(1-p)), abs(b-a)*sqrt(n*p*(1-p)) for n=1
+abs(1-(-1))*sqrt(9/19*10/19)
+# 0.998614,  close to 1
+
+#for 1000 draws, expected value
+sum_draws <-  1000 * (1*(10/19)+(-1)*(9/19))
+# $52.63
+draw_error = sqrt(1000) * abs(1-(-1))*sqrt(9/19*10/19)
+# $31.57
+
+#Chance of losing money, ie value <0
+pnorm(0, sum_draws, draw_error)
+# 0.0478 or 4.7% chance of losing money
+
+#-------------------------------------------
+# Example using mortage foreclosure rates
+
+#predicting defaults loss
+n <- 1000
+l <- -200000 #loss per foreclosure
+p <- 0.02
+defaults <- sample(c(0,1), n, prob = c(1-p, p), replace = TRUE)
+sum(defaults * loss_per_foreclosure)
+#avg -$3,000,000
+
+#adjust interest rate to break even.  x is amount that must be added to each 
+#loan to offset loss  per forecosure, l,  lp + x(1-p) = 0, solve for x
+x <- l*p/(1-p)
+# $4082
+
+#want chance of losing money to be 1/100 or 0.01 at calculated value of x
+# n *(ap + b(1-p))  for n=1
+meanloss <- l*p + x*(1-p)
+# $0
+# se for n= 1,   abs(b-a)*sqrt(n*p*(1-p))
+seloss <- abs(x-l)* sqrt(p*(1-p))
+# 27,428
+
+
+#find value of x so that chance of losing money is 0.01
+#Z score-  prob(S <0) = 0.01
+# through adding and dividing S becomes Z = (S - E(S))/SE[S]
+# prob((S - E(S))/SE[S]) < -E[S]/SE[S]) = 0.01
+# prob(Z < -(n *(ap + b(1-p)))/abs(b-a)*sqrt(n*p*(1-p)) ) = 0.01
+# prob(Z < -(n *(lp + x(1-p)))/abs(x-l)*sqrt(n*p*(1-p)) ) = 0.01
+# this makes Z a standard normal variable with expected value = 0 and se =1
+
+# z, the quantile of Z at 0.01 probility is equal to qnorm(0.01)
+#prob(Z) = z
+z <- qnorm(0.01)
+
+#reminder
+#qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) p is a vector of probabilities
+#calculates quantiles, first quantile is 0.25. ie it gives a value that p proportion 
+# or probability of all the values is less than the computed value.
+
+# prob(Z < -(n *(lp + x(1-p)))/abs(x-l)*sqrt(n*p*(1-p)) ) = 0.01
+# z = -(n *(lp + x(1-p)))/abs(x-l)*sqrt(n*p*(1-p)), arrange to solve for x
+x <- -l *(n*p - z* sqrt(n*p*(1-p)))/ (n*(1-p) + z* sqrt(n*p*(1-p)))
+x
+# $6249.18
+meanloss <- l*p + x*(1-p)
+
+# 2,124 avg profit per loan with x = $6249
+meanloss * 1000
+# profit of 2.21 million per 1000 loans
+mean <- l * p + x * (1-p)
+se <- abs(x-l)* sqrt(p*(1-p))
+
+n <- z^2*se^2/mean^2
+
+
+
+#for buffer assume 4% default rate, set interested rate, r at 5%
+r <-0.05
+x <- r * 180000 
+l * p + x * (1-p)
+# E[S] = n * mean
+#SE[S] = sqrt(n) * sd
+# prob((S - E(S))/SE[S]) < -E[S]/SE[S]) = 0.01
+# prob(Z< -E[S]/SE[S]) = 0.01
+# z = -E[S]/SE[S] = -(n * mean)/(sqrt(n) * sd) = -(sqrt(n)* mean)/sd
+# low of large numbers, when n is large the avg earning per loan converges
+# to the mean
+# n >= z^2*se^2/mean^2
+
+mean <- l * p + x * (1-p)
+se <- abs(x-l)* sqrt(p*(1-p))
+
+n <- z^2*se^2/mean^2
+#or in notes
+n <- ceiling(z^2*(abs(x-l))^2*p*(1-p))/(l * p + x * (1-p))^2
+# 199
+# equals 2000 if value of x for previous default rate
+
+
+#monte carlo
+r <-0.05
+x <- r * 180000 
+p <- 0.04
+B <- 10000
+
+profit <- replicate(B, {
+  draws <- sample( c(x, l), n, prob = c(1-p,p), replace= TRUE)
+  sum(draws)
+})
+mean(profit<0)
+mean(profit)
+
+
+profit2 <- replicate(B, {
+  new_p <- 0.04 + sample(seq(-0.01,0.01, length= 100), 1)
+  draws <- sample( c(x, l), n, prob = c(1-new_p,new_p), replace= TRUE)
+  
+  sum(draws)
+})
+mean(profit2<0)
+mean(profit2)
+
+#note several of these values do not match example in edx PH125.3x.  
+
+

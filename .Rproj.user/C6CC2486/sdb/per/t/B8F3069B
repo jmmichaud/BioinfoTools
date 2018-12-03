@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# The vector `p` contains 100 proportions of Democrats ranging from 0 to 1 using the `seq` function\np <- seq(0, 1, length = 100)\n\n# The vector `sample_sizes` contains the three sample sizes\nsample_sizes <- c(25, 100, 1000)\n\n# Write a for-loop that calculates the standard error `se` for every value of `p` for each of the three samples sizes `N` in the vector `sample_sizes`. Plot the three graphs, using the `ylim` argument to standardize the y-axis across all three plots.\nfor(N in sample_sizes){\n  se <-  sqrt((p * (1-p))/N)\n}  \nplot(p,se, ylim= c(0,sqrt(0.5/25)))\n\n\n\n# Write a function called `take_sample` that takes `p` and `N` as arguements and returns the average value of a randomly sampled population.\ntake_sample <- function(p,N){\n  X <- sample (c(1,0), size = N, replace= TRUE, prob= c(p,1-p))\n  mean(X)\n#  return(X)\n}\n\n# Use the `set.seed` function to make sure your answer matches the expected result after random sampling\nset.seed(1)\ntake_sample(0.45, 100)\n\nlibrary(dslabs)\n# Load the data\ndata(polls_us_election_2016)\n\n# Generate an object `polls` that contains data filtered for polls that ended on or after October 31, 2016 in the United States\npolls <- filter(polls_us_election_2016, )\n\n# How many rows does `polls` contain? Print this value to the console.\n\n\n# Assign the sample size of the first poll in `polls` to a variable called `N`. Print this value to the console.\n\n\n\n# For the first poll in `polls`, assign the estimated percentage of Clinton voters to a variable called `X_hat`. Print this value to the console.\n\n\n# Calculate the standard error of `X_hat` and save it to a variable called `se_hat`. Print this value to the console.\n\n\n# Use `qnorm` to calculate the 95% confidence interval for the proportion of Clinton voters. Save the lower and then the upper confidence interval to a variable called `ci`.\n",
+    "created" : 1542149258118.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "255400201",
+    "id" : "B8F3069B",
+    "lastKnownWriteTime" : 1529001848,
+    "last_content_update" : 1529001848,
+    "path" : "~/OneDrive/Coding Reference/DataScience_edxHarvardx/inference_modelingclass.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
