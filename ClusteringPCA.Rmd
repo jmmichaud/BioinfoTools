@@ -1,8 +1,6 @@
 ---
 title: "Clustering and PCA"
-output:
-  html_document:
-    df_print: paged
+output: github_document
 ---
 
 The code described in this notebook decribe how to perform hierarchal clustering to create dendrograms and how to perform simple principal component analysis (PCA) in R using multiple methods.  Clustering is applied to differential gene expression (DGE) files.  PCA is performed on storm data with multiple parameters.  

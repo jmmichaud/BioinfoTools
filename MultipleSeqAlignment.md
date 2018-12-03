@@ -1,0 +1,22 @@
+Multiple Sequence Alignment
+================
+
+This code demonstates several multiple sequence alignments on 16S sequences using the DECIPHER package. DECIPHER like many other aligners maximizes a score that combines structural and evolutionary alignment. It performs iterative sequence alignment of multiple sequences by first aligning two sequences and adding in subsequent sequences one at a time. There are other fuctions to refine alignments such as aligning DNA to RNA, alignments on very large datasets, staggered alignment that ignore non-homologous regions, and adjustments that shift gaps to allow better alignment which is what it is used for here. It reads in fasta file of several 16 sequences and uses AlignSeqs() and AdjustALignment() with default settings to align them. AdjustAlign() allows for gaps to be shifted to improve alignments. This was useful to align 16S sequences of different lengths and different coverage.
+
+The alignments are achieved by through iteration through fasta files of seperate bacterial genera and outputs the alignments within each genera into a seperate file.
+
+    library(DECIPHER)
+    namelist <- list(c("Arthrobacter","Bacillus","BacillusPaenibacillus", "Brevibacterium","Cellulosimicrobium","Cryptococcus", "Curtobacterium", "Microbacterium", "Paenibacillus","Pantoea","Planococcus","Pseudomonas","Psychrobacter"))
+
+    for (name in namelist) {
+      filename <- paste0(name,"_fasta.txt")
+      fileout <- paste0(name, "_DAlignAdj.txt")
+    }
+    count <- 1
+    for (i in 1:13) {
+      dna <- readDNAStringSet(filename[count])
+      adna <- AlignSeqs(dna) 
+      AdjDNA <- AdjustAlignment(adna)
+      writeXStringSet(AdjDNA, file =fileout[count])
+      count <- count + 1
+    }

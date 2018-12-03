@@ -1,8 +1,7 @@
 ---
 title: "Inference and Modeling Reference"
 output:
-  html_document:
-    df_print: paged
+  github_document
 ---
 
 This is a brief guide to inference and modeling. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers p-value, spread, margin of error, and confidence intervals. These parameters are applied to look at samples to estimate values of the population the derive from and to evaluate the reliability and significance estimates. How to perform monte carlo simulations to make estimates about a population are also examined. The examples included apply these concepts to polling statistics.

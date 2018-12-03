@@ -1,9 +1,7 @@
 ---
 title: "Distribution Functions Reference"
 output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+  github_document
 ---
 
 This is a brief guide to distribution functions and their application to continuous distrubtions in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers culmative distribution, the central limit theorem, and law of large numbers applied to determing probability of of events and sample modeling. The examples examine primarily leveraging a normal distrubtion even for variables that are not normally distributed and explain the 4 base R functions that are useful for a variety of distributions which are also referenced. The examples include modeling the behavior of a roulette wheel to evaluate potential profit and examining mortage interest and foreclosure rates to increase the probability of profit.
@@ -162,6 +160,7 @@ mean(avgprofit)
 Compare histogram of avgprofit to density function deriveed from the mean and sd alone.  They should show that the simulation matches a normal distribution extremely well.
 ```{r}
 library(ggplot2)
+library(magrittr)
 s <- seq(min(avgprofit), max(avgprofit), length = 100)
 normal_density <-data.frame(s = s, f= dnorm(s, mean(avgprofit), sd(avgprofit)))
 data.frame(avgprofit = avgprofit) %>% ggplot(aes(avgprofit, ..density..)) +

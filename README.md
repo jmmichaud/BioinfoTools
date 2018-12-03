@@ -13,11 +13,11 @@ This collection of algorithms, scripts, and reference material serve as an organ
     4. [Peptide Sequencing](#peptide-sequencing)
     5. [Sequence Alignment](#sequence-alignment)
 2. [Bioinformatic Tools](#bioinformatic-tools)
-    1. [Muliple Sequence Alignment](#mulitple-sequence-alignment)
-    2. [Clustering and PCA](#clustering-and-pca)
+    1. [Muliple Sequence Alignment](#bioinformatic-tools)
+    2. [Clustering and PCA](#bioinformatic-tools)
 3. [Statistics and Probability Reference](#statistics-and-probability-reference)
-    1. [Discrete Probability Reference](#discrete-probability-reference)
-    2. [Distribution Functions Reference](#distribution-functions-reference)
+    1. [Discrete Probability Reference](#statistics-and-probability-reference)
+    2. [Distribution Functions Reference](#statistics-and-probability-reference)
     3. [Inference and Modeling Reference](#statistics-and-probability-reference)
 4. [Basic Functions](#basic-functions)
 
@@ -77,9 +77,9 @@ Kmer motifs can also be shared between different homologs within different speci
 ## **Bioinformatic Tools**
 --------
 
-**[Muliple Sequence Alignment](https://github.com/jmmichaud/BioinfoTools/blob/master/MultipleSeqAlignment.nb.html)** - R.  This R notebook demonstates several multiple sequence alignments on 16S sequences using the DECIPHER package in R.  DECIPHER like many other aligners maximizes a score that combines structural and evolutionary alignment. It performs iterative sequence alignment of multiple sequences by first aligning two sequences and adding in subsequent sequences one at a time. There are other fuctions to refine alignments such as aligning DNA to RNA, alignments on very large datasets, staggered alignment that ignore non-homologous regions, and adjustments that shift gaps to allow better alignment. It reads in fasta file of several 16 sequences and uses AlignSeqs() and AdjustALignment() with default settings to align them.  AdjustAlign() allows for gaps to be shifted to improve alignments.  This was useful to align 16S sequences of different lengths and different coverage.
+**[Muliple Sequence Alignment](https://github.com/jmmichaud/BioinfoTools/blob/master/MultipleSeqAlignment.md)** - R.  This R notebook demonstates several multiple sequence alignments on 16S sequences using the DECIPHER package in R.  DECIPHER like many other aligners maximizes a score that combines structural and evolutionary alignment. It performs iterative sequence alignment of multiple sequences by first aligning two sequences and adding in subsequent sequences one at a time. There are other fuctions to refine alignments such as aligning DNA to RNA, alignments on very large datasets, staggered alignment that ignore non-homologous regions, and adjustments that shift gaps to allow better alignment. It reads in fasta file of several 16 sequences and uses AlignSeqs() and AdjustALignment() with default settings to align them.  AdjustAlign() allows for gaps to be shifted to improve alignments.  This was useful to align 16S sequences of different lengths and different coverage.
 
-**[Clustering and PCA](https://github.com/jmmichaud/BioinfoTools/blob/master/ClusteringPCA.html)** - R.  This R notebook decribes how to perform hierarchal clustering to create dendrograms and how to perform simple principal component analysis (PCA) in R using multiple methods.  Clustering is applied to differential gene expression (DGE) files.  PCA is performed on storm data with multiple parameters. 
+**[Clustering and PCA](https://github.com/jmmichaud/BioinfoTools/blob/master/ClusteringPCA.md)** - R.  This R notebook decribes how to perform hierarchal clustering to create dendrograms and how to perform simple principal component analysis (PCA) in R using multiple methods.  Clustering is applied to differential gene expression (DGE) files.  PCA is performed on storm data with multiple parameters. 
 
 
 ## **Statistics and Probability Reference**
@@ -87,11 +87,11 @@ Kmer motifs can also be shared between different homologs within different speci
 
 The R notebooks in this section are reference material for statistic and probability concepts, their application, and the functions in R useful to their application. Most examples derive from Harvard Data Science course series on edX (PH125). The examples are to serve as a reference only and examples are either taken directly or adapted from examples in these courses.
 
-**[Discrete Probability Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/DiscreteProbabilityReference.nb.html)** - R. This is a brief guide to discrete probality in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers permutations, combinations, and the use of monte carlo simulations to make predictions. 
+ **[Discrete Probability Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/DiscreteProbabilityReference.md)** - R. This is a brief guide to discrete probality in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers permutations, combinations, and the use of monte carlo simulations to make predictions. 
 
-**[Distribution Functions Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/DistributionFunctionsReference.nb.html)** - R. This is a brief guide to distribution functions and their application to continuous distrubtions in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers culmative distribution, the central limit theorem, and law of large numbers applied to determing probability of of events and sample modeling. The examples examine primarily leveraging a normal distrubtion even for variables that are not normally distributed and explain the 4 base R functions that are useful for a variety of distributions which are also referenced. The examples include modeling the behavior of a roulette wheel to evaluate potential profit and examining mortage interest and foreclosure rates to increase the probability of profit.
+ **[Distribution Functions Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/DistributionFunctionsReference.md)** - R. This is a brief guide to distribution functions and their application to continuous distrubtions in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers culmative distribution, the central limit theorem, and law of large numbers applied to determing probability of of events and sample modeling. The examples examine primarily leveraging a normal distrubtion even for variables that are not normally distributed and explain the 4 base R functions that are useful for a variety of distributions which are also referenced. The examples include modeling the behavior of a roulette wheel to evaluate potential profit and examining mortage interest and foreclosure rates to increase the probability of profit.
 
-**[Inference and Modeling Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/InferenceModelingReference.html)** - R. This is a brief guide to inference and modeling. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers p-value, spread, margin of error, and confidence intervals. These parameters are applied to look at samples to estimate values of the population the derive from and to evaluate the reliability and significance estimates. How to perform monte carlo simulations to make estimates about a population are also examined. The examples included apply these concepts to polling statistics.
+ **[Inference and Modeling Reference](https://github.com/jmmichaud/BioinfoTools/blob/master/InferenceModelingReference.md)** - R. This is a brief guide to inference and modeling. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers p-value, spread, margin of error, and confidence intervals. These parameters are applied to look at samples to estimate values of the population the derive from and to evaluate the reliability and significance estimates. How to perform monte carlo simulations to make estimates about a population are also examined. The examples included apply these concepts to polling statistics.
 
 ## Basic Functions
 --------
