@@ -1,13 +1,13 @@
 BioinfoTools
 ========
 
-This collection of algorithms, scripts, and reference material serve as an organized repository to allow future access, use, and application of its contents. Python algorithms were written with the guidance of online resourses such as the Bioinformatics specialization on Coursera (Pavel Pevzner, Philip Compeau), Rosalind, the various other MOOC courses.  Statstics and probability reference guides largely represent material derived from the HarvardX Data Science courses on edX (Rafael Irizarry). 
+This collection of algorithms, scripts, and reference material serve as an organized repository to allow future access, use, and application of its contents. Python algorithms were written with the guidance of online resourses such as the Bioinformatics specialization on Coursera (Pavel Pevzner, Philip Compeau), Rosalind, the various other MOOC courses.  Statstics and probability reference guides largely represent material derived from the HarvardX Data Science courses on edX (Rafael Irizarry). Code is self-written unless indicated otherwise.
 
 
 ## Table of Contents
 
 1. [Bioinformatic Algorithms](#bioinformatic-algorithms)
--Finding kmer Motifs in a DNA Sequence
+-[Finding kmer Motifs in a DNA Sequence](#finding-kmer-motifs-in-a-dna-sequence)
 -Finding kmer Motifs between DNA Sequences
 -DNA Sequencing
 -Peptide Sequencing
@@ -22,27 +22,24 @@ This collection of algorithms, scripts, and reference material serve as an organ
 4. [Basic Functions](#basic-functions)
 
 
-- [Finding kmer motifs in a DNA sequence](https://github.com/jmmichaud/Projects#Motifs)
-- [Finding kmer motifs between DNA sequences](https://github.com/jmmichaud/Projects#Consensus)
-- [Basic Functions](https://github.com/jmmichaud/Projects#BasicFuctions)
 
-https://github.com/jmmichaud/BioinfoTools/upload
-# Bioinformatic Algorithms
+# **Bioinformatic Algorithms**
+--------
 
 
-Finding kmer Motifs in a DNA Sequence
+# Finding kmer Motifs in a DNA Sequence
 ---------
 
 Kmers are short regions of DNA that have utility in finding unique patterns in DNA.  They can indicate transcription factor binding sites, polymerase binding sites, and a variety of regulatory elements. This collection of functions and programs find kmers within a genome or region of DNA.
 
-**[Brute Force Motif Enumeration](https://github.com/jmmichaud/BioinfoTools/???)** - PYTHON 3.6. Inputs a list of DNA fragments as a list of strings(dna), a kmer length(k), and an allowed number of mismatches.  Outputs a motif or motifs of length k in common between the first dna fragment and other dna fragments allowing for d mismatches.  Output is a space seperated list. It employs an algorithm to determine all motifs of length k with at most d mismatches for each dna fragment and then finds common motifs between the motif collections for each DNA fragment. This brute force algorithm is thorough but computationally expensive. It is only practical for short DNA lengths with low values of allowed mismatches.  
+**[Brute Force Motif Enumeration](https://github.com/jmmichaud/BioinfoTools/BruteMotifEnumeration)** - PYTHON 3.6. Inputs a list of DNA fragments as a list of strings (dna), a kmerlength (k), and an allowed number of mismatches (d). Outputs a list of highest occuring motif or motifs of length k found between the dna fragments with at most d mismatches for each occurence. It employs an algorithm to determine all motifs of length k with at most d mismatches for each dna fragment and then finds common motifs between the motif collections for each DNA fragment. This brute force algorithm is thorough but computationally expensive. It is only practical for short DNA lengths with low values of allowed mismatches.  
 
 **[Find DnaA Box Within a Genome](https://github.com/jmmichaud/BioinfoTools/FindDNAboxfromGenome.py)** - PYTHON 3.6. A small program that inputs a genome and finds candidates for DnaA box. G-C skew is used to identify region that contains orignin of replication (ORI).  A 500 bp window identified by the skew or a user defined values are used to find highest occuring 9-mer motifs with at most 1 mismatch. The algorithm employs quaternary encoding and frequency arrays to improve compuational efficiency allowing for location of larger motifs and more allowed mismatches.  The code can easily be altered to find motifs of different length and mismatches in any defined region of DNA within a genome.
 
 **[Finding Kmers in Clumps](https://github.com/jmmichaud/BioinfoTools/FindingKmersInClumps.py)** - PYTHON 3.6. Specific motifs are generally grouped or found in clumps or short regions within a genome. This collection of functions inputs a DNA sequence or genome as a string, a kmer length (k), a window or clump lenth (L), and a minimum number of occurences (t). Outputs all kmers that occur within L-length windows that occur a minimum of t times within a L length window within the sequence.  Utilizes an efficient frequency array dictionary of the first L-length window as a basis and alters the dictionary based upon sliding one base at a time and changing the frequency of only the first and last kmers in the window. This algorithm can also be altered to give kmers with and number of occurences and positions within the genome.
 
 
-Finding kmer Motifs between DNA Sequences
+# Finding kmer Motifs between DNA Sequences
 ---------
 
 Kmer motifs can also be shared between different homologs within different species and so it is useful to look at several DNA regions simulataneously.  It is also useful to look at multiple site withing the same genome as distinct to identify kmers from different regions in the DNA.
@@ -54,7 +51,7 @@ Kmer motifs can also be shared between different homologs within different speci
 **[Find Transcription Factor Binding Sites](https://github.com/jmmichaud/BioinfoTools/FindTFBindingSites.py)** - PYTHON 3.6.  This code utilizes a modified version of the Gibbs Median Motifs algorithm to find transcription factor binding sites.  Using a list of DNA strings (dnalist), a kmer length (k), and DNA list length (t), a number of iterations (N), and a number of starts (M) it finds median strings in each DNA region.  This shows and example to find transcription factor binding sites in Mycobacterium tuberculosis.
 
 
-DNA Sequencing
+# DNA Sequencing
 ---------
 
 **[DNA Sequencing Functions](https://github.com/jmmichaud/BioinfoTools/DNASequencingFunctions.py)** - PYTHON 3.6.  A collection of functions that input single or paired reads that assemble reads as intact sequences or non-branched contigs (largest runs of DNA that can be assembled without including paths with multiple possible variations). Assembly is guided through the generation of Debruijn Graphs and Eulerian Paths.
@@ -63,28 +60,30 @@ DNA Sequencing
 
 **[DNA Sequencing Paired Reads](https://github.com/jmmichaud/BioinfoTools/DNASequencingPairedReads.py)** - PYTHON 3.6.  Defines a class of paired read DNA sequencing data and associated functions that assemble paired read data into an intact assembly or non-branching contigs as data dictates.  Assembly is guided through the generation of Debruijn Graphs and Eulerian Paths.
 
-Peptide Sequencing
+# Peptide Sequencing
 ---------
 
 **[Peptide Sequencing Functions](https://github.com/jmmichaud/BioinfoTools/PeptideSequencingFunctions.py)** - PYTHON 3.6.  A collection of functions that input mass spectrometry measurements of unknown peptides and generate linear and cyclopeptide sequences.  The approaches generally entail building peptides by mass one amino acid at a time and trimming to eliminate possilbilities not compatible with provided spectra at each stage to minimize run time.  Most function utilize normalized integer mass data.  An attempt is made to sequence a cyclic antibiotic using real mass spectrometry data.
 
 **[Cyclopeptide Sequencing](https://github.com/jmmichaud/BioinfoTools/CyclopeptideSequencing.py)** - PYTHON 3.6.  - A subset of 'Peptide Sequencing Functions' that optimize cyclopeptide sequencing.  The optimized Cyclopeptide Sequencing function, inputs two integers (M and N) and a mass spectrum of an unknown cyclopeptide as list of integer masses.  Outputs all lead peptides (as a list of masses and a list of in one-letter AA code) of a maximal score using N as a cutoff for a trim function including ties. Uses an AA list generated from processing of the spectrum and returning M topscoring masses between 57 - 200 including ties allowing for non-standard amino acids. It takes advantage of both using a leader board to keep N top scoring peptides and scoring algorithsm that compare the spectrum to each generated spectra of peptides from the leaderboard to generate a leader peptide list where each peptide is maximal achieved score. 
 
-Sequence Alignment
+# Sequence Alignment
 ---------
 
 **[Sequence Alignment Functions](https://github.com/jmmichaud/BioinfoTools/SequenceAlignmentFunctions.py)** - PYTHON 3.6. A collection of functions that input two either DNA or peptide sequences and generate alignments that maximize a score or path length using a Manhattan Tourist algorithm approach.  This method generally employs the creation of longest path matrices that use precursor nodes to calculate a maximum score and this is used to generate a "backtrack" matrix that uses symbols and allow for reverse construction of alignment sequences. Different approaches to matrix initialization enable both local and global alignments as well as alignments between sequences of differing length, overlapping sequences, and subsequences within provided sequences. The incorporation and comparison of both opening (introducing an insertion/deletion) and extension (continuing an insertion or deletion) allow for strong global alignments.
 
 **[Sequence Alignment Functions Expanded](https://github.com/jmmichaud/BioinfoTools/SequenceAlignmentFunctionsExpanded.py)** - PYTHON 3.6.  A larger set of functions that includes all of the functions in 'Sequence Alignment Functions' and several more that follow the development of the global alignment algorithm as well as a function to calculate the number of changes needed to make one sequence into another provided sequence.
 
-# Bioinformatic Tools
+# **Bioinformatic Tools**
+--------
 
 **[Muliple Sequence Alignment](https://github.com/jmmichaud/BioinfoTools/MultipleSeqAlignment.nb.html)** - R.  This R notebook demonstates several multiple sequence alignments on 16S sequences using the DECIPHER package in R.  DECIPHER like many other aligners maximizes a score that combines structural and evolutionary alignment. It performs iterative sequence alignment of multiple sequences by first aligning two sequences and adding in subsequent sequences one at a time. There are other fuctions to refine alignments such as aligning DNA to RNA, alignments on very large datasets, staggered alignment that ignore non-homologous regions, and adjustments that shift gaps to allow better alignment. It reads in fasta file of several 16 sequences and uses AlignSeqs() and AdjustALignment() with default settings to align them.  AdjustAlign() allows for gaps to be shifted to improve alignments.  This was useful to align 16S sequences of different lengths and different coverage.
 
 **[Clustering and PCA](https://github.com/jmmichaud/BioinfoTools/ClusteringPCA.html)** - R.  This R notebook decribes how to perform hierarchal clustering to create dendrograms and how to perform simple principal component analysis (PCA) in R using multiple methods.  Clustering is applied to differential gene expression (DGE) files.  PCA is performed on storm data with multiple parameters. 
 
 
-# Statistics and Probability Reference
+# **Statistics and Probability Reference**
+--------
 
 The R notebooks in this section are reference material for statistic and probability concepts, their application, and the functions in R useful to their application. Most examples derive from Harvard Data Science course series on edX (PH125). The examples are to serve as a reference only and examples are either taken directly or adapted from examples in these courses.
 
@@ -92,9 +91,10 @@ The R notebooks in this section are reference material for statistic and probabi
 
 **[Distribution Functions Reference](https://github.com/jmmichaud/BioinfoTools/DistributionFunctionsReference.nb.html)** - R. This is a brief guide to distribution functions and their application to continuous distrubtions in R. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers culmative distribution, the central limit theorem, and law of large numbers applied to determing probability of of events and sample modeling. The examples examine primarily leveraging a normal distrubtion even for variables that are not normally distributed and explain the 4 base R functions that are useful for a variety of distributions which are also referenced. The examples include modeling the behavior of a roulette wheel to evaluate potential profit and examining mortage interest and foreclosure rates to increase the probability of profit.
 
-**[Inference and Modeling Reference](https://github.com/jmmichaud/BioinfoTools/InferenceModelingReference.nb.html)** - R. This is a brief guide to inference and modeling. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers p-value, spread, margin of error, and confidence intervals. These parameters are applied to look at samples to estimate values of the population the derive from and to evaluate the reliability and significance estimates. How to perform monte carlo simulations to make estimates about a population are also examined. The examples included apply these concepts to polling statistics.
+**[Inference and Modeling Reference](https://github.com/jmmichaud/BioinfoTools/InferenceModelingReference.html)** - R. This is a brief guide to inference and modeling. It provides background on the statical methods covered, pertinent R functions, and examples of their application.  It covers p-value, spread, margin of error, and confidence intervals. These parameters are applied to look at samples to estimate values of the population the derive from and to evaluate the reliability and significance estimates. How to perform monte carlo simulations to make estimates about a population are also examined. The examples included apply these concepts to polling statistics.
 
 # Basic Functions
+--------
 
 A repository of useful functions that are utilized in a variety of computation tasks.
 
@@ -107,7 +107,7 @@ A repository of useful functions that are utilized in a variety of computation t
 **[Hamming Distance](https://github.com/jmmichaud/BioinfoTools/HammingDistance.py)** - PYTHON 3.6.  Inputs two equal length DNA strings. Outputs the hamming distance between
     them as an integer.  Each mismatch is a score of 1.
     
-**[GCSkew Minimum and Maximum](https://github.com/jmmichaud/BioinfoTools/GCSkew.py)** - PYTHON 3.6.  Inputs DNA as a text string.  Functions can output either the positions of minimum or maximum GC SKew score. The GC Skew is calculated as the running difference between G and C bases with each G base contributing +1 and each C, -1. 
+**[GCSkew Minimum and Maximum](https://github.com/jmmichaud/BioinfoTools/GCSkewMinMax.py)** - PYTHON 3.6.  Inputs DNA as a text string.  Functions can output either the positions of minimum or maximum GC SKew score. The GC Skew is calculated as the running difference between G and C bases with each G base contributing +1 and each C, -1. 
 
 **[Kmer Neighbors](https://github.com/jmmichaud/BioinfoTools/KmerNeighbors.py)** - PYTHON 3.6.  Inputs a DNA pattern as a text string and a number of allowed mismatches, d.  Outputs all permutations of the pattern than have no more than d mismatches. 
 
@@ -127,7 +127,7 @@ A repository of useful functions that are utilized in a variety of computation t
 
 *[Remove List Duplicates](https://github.com/jmmichaud/BioinfoTools/RemoveListDuplicates.py)** - PYTHON 3.6.  Short function to remove duplicate lists from a list of lists.
 
-*[Useful DNA RNA Protein Funtions](https://github.com/jmmichaud/BioinfoTools/UsefulDNARNAProteinFunctions.py)** - PYTHON 3.6.  A short list of function that perform conversions from DNA to RNA and vice versa, protein translation from RNA, and a function that takes a short DNA sequence and find encoding substrings within a provided protein sequence.
+*[Useful DNA RNA Protein Functions](https://github.com/jmmichaud/BioinfoTools/UsefulDNARNAProteinFunctions.py)** - PYTHON 3.6.  A short list of function that perform conversions from DNA to RNA and vice versa, protein translation from RNA, and a function that takes a short DNA sequence and find encoding substrings within a provided protein sequence.
     
 
 
