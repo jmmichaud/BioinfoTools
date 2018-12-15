@@ -3,7 +3,6 @@ BioinfoTools
 
 This collection of algorithms, scripts, and reference material serve as an organized repository to allow future access, use, and application of its contents. Python algorithms were written with the guidance of online resourses such as the Bioinformatics Specialization on Coursera (Pavel Pevzner, Philip Compeau), Rosalind, the various other MOOC courses.  Statstics and probability reference guides largely represent material derived from the HarvardX Data Science courses on edX (Rafael Irizarry). 
 
-
 ## Table of Contents
 
 1. [Bioinformatic Algorithms](#bioinformatic-algorithms)
@@ -20,7 +19,6 @@ This collection of algorithms, scripts, and reference material serve as an organ
     2. [Distribution Functions Reference](#statistics-and-probability-reference)
     3. [Inference and Modeling Reference](#statistics-and-probability-reference)
 4. [Basic Functions](#basic-functions)
-
 
 
 ## **Bioinformatic Algorithms**
